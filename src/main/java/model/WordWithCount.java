@@ -1,5 +1,8 @@
-package com.knoldus;
+package model;
 
+/**
+ * WordWithCount is a POJO class which contains word and associated count the occurrence of the word.
+ */
 public class WordWithCount {
 
     public String word;

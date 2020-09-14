@@ -33,7 +33,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>com.knoldus.SessionWindow</mainClass>
+                            <mainClass>com.knoldus.WindowExampleSelection</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

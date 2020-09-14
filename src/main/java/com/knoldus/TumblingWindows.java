@@ -1,38 +1,31 @@
 package com.knoldus;
 
-import org.apache.flink.api.common.ExecutionConfig;
+import model.WordWithCount;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.functions.ReduceFunction;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
-import org.apache.flink.api.common.typeutils.TypeSerializer;
 import org.apache.flink.api.java.functions.KeySelector;
-import org.apache.flink.api.java.tuple.Tuple2;
-import org.apache.flink.api.java.typeutils.TupleTypeInfo;
 import org.apache.flink.streaming.api.scala.DataStream;
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingProcessingTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
-import org.apache.flink.util.Collector;
 import org.apache.log4j.Logger;
-import scala.Function1;
-import scala.collection.Seq;
 
-import java.util.Arrays;
+/**
+ * TumblingWindows Class contains a method tumblingWindow that contains
+ * implementation of word count problem using Tumbling window based on processing time.
+ */
+public final class TumblingWindows {
 
-public class TumblingWindows {
+    public final void tumblingWindow() {
 
-    private static final Logger LOGGER = Logger.getLogger(SlidingWindows.class);
-
-    public static void main(String[] args) {
-        LOGGER.info("Tumbling window word count example.");
-
-        StreamExecutionEnvironment executionEnvironment =
+        final StreamExecutionEnvironment executionEnvironment =
                 StreamExecutionEnvironment.getExecutionEnvironment();
 
-        DataStream<String> text = executionEnvironment
-                .socketTextStream("localhost", 9000, '\n',6);
+        final DataStream<String> text = executionEnvironment
+                .socketTextStream("localhost", 9000, '\n', 6);
 
-        final DataStream<WordWithCount> reduce = text
+        final DataStream<WordWithCount> tumblingWordCount = text
                 .flatMap((FlatMapFunction<String, WordWithCount>) (textStream, wordCountKeyPair) -> {
                     for (String word : textStream.split("\\W")) {
                         wordCountKeyPair.collect(new WordWithCount(word, 1L));
@@ -45,9 +38,9 @@ public class TumblingWindows {
                         (a, b) -> new WordWithCount(a.word, a.count + b.count));
 
         // print the results with a single thread, rather than in parallel
-        reduce.print();
+        tumblingWordCount.print();
 
-        executionEnvironment.execute("Socket Window WordCount");
+        executionEnvironment.execute("Flink Tumbling window Example");
     }
 
 
